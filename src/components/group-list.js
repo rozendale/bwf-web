@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@material-ui/core';
+import { getGroups } from '../services/group-services';
+
 
 function GroupList() {
 
@@ -16,10 +18,9 @@ function GroupList() {
   useEffect(() => {
     setLoading(true);
     const getData = async () => {
-      await fetch('http://127.0.0.1:8000/api/groups/')
-      .then(resp => resp.json())
-      .then( groups => {
-        setGroups(groups);
+      await getGroups()
+      .then( data => {
+        setGroups(data);
         setLoading(false);
       }).catch( e => {
         setError(true);
@@ -36,7 +37,9 @@ function GroupList() {
     <div>
       <Button onClick={() => handleClick()}>test-to-about</Button>
         { groups && groups.map((group => {
-          return <p key={group.id}>{group.name}: {group.location}</p>
+          return <Link key={group.id} to={`/details/${group.id}`}>
+              <p>{group.name}: {group.location}</p>
+            </Link>
         }))}
     </div>
   );
