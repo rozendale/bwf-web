@@ -2,10 +2,25 @@ import React, {useEffect, useState} from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Button } from '@material-ui/core';
 import { useFetchGroup } from '../hooks/fetch-group';
+import {DateTime} from 'luxon';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import AlarmIcon from '@mui/icons-material/Alarm';
+import { makeStyles } from '@material-ui/core/styles';
+import { ClassNames } from '@emotion/react';
 
+
+const useStyles = makeStyles( theme => ({
+  dateTime: {
+    fontSize: '18px',
+    marginRight: '3px',
+    marginTop: '10px',
+    // color: theme.colors.mainAccentColor
+    color: 'gold',
+  }
+}));
 
 function GroupDetail() {
-
+  const classes = useStyles();
   const { groupId } = useParams();
   const [ data, loading, error ] = useFetchGroup(groupId);
   const [group, setGroup] = useState(null);
@@ -34,9 +49,21 @@ function GroupDetail() {
       <>
         <h1 key={group.id}>{group.name}: {group.location}</h1>
         <h2>{group.description}</h2>
-        <h3>{group.events.map((item) => (
-          <h3>{item.id} = {item.team1} - {item.team2}</h3>
-        ))}</h3>
+        {/* <h3>{group.events.map((event) => (
+          <h3>{event.id} = {event.team1} - {event.team2}</h3>
+        ))}</h3> */}
+        <h3>Events:</h3>
+        { group.events.map ( event => {
+          const format = "yyyy-MM-dd'T'hh:mm:ss'Z'"
+          const evtTime = DateTime.fromFormat(event.time, format)
+          return <div key={event.id}>
+            <h3>{event.team1} vs. {event.team2}</h3>
+            <p>
+              <CalendarTodayIcon className={classes.dateTime}/>{evtTime.toSQLDate()}
+              <AlarmIcon className={classes.dateTime}/>{evtTime.toFormat('HH:mm')}
+            </p>
+          </div>
+        })}
       </>
       }
     </div>
