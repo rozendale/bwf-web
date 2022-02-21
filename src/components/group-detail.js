@@ -1,14 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Button } from '@material-ui/core';
-import { getGroup } from '../services/group-services';
+import { useFetchGroup } from '../hooks/fetch-group';
+
 
 function GroupDetail() {
 
   const { groupId } = useParams();
-  const [ group, setGroup] = useState(null);
-  const [ loading, setLoading] = useState(false);
-  const [ error, setError] = useState(false);
+  const [ data, loading, error ] = useFetchGroup(groupId);
+  const [group, setGroup] = useState(null);
+  // const [ group, setGroup] = useState(null);
+  // const [ loading, setLoading] = useState(false);
+  // const [ error, setError] = useState(false);
   const navigate = useNavigate();
 
   function handleClick() {
@@ -17,15 +20,8 @@ function GroupDetail() {
 
   console.log(groupId)
   useEffect(() => {
-    setLoading(true);
-    const getData = async () => {
-      await getGroup(groupId).then( data => {
-        setLoading(false);
-        setGroup(data);
-      })
-    }
-    getData();
-  }, [])
+    setGroup(data)
+  }, [data])
   console.log(group)
   if (error) return <h1>Error</h1>
   if (loading) return <h1>Loading...</h1>
@@ -34,7 +30,15 @@ function GroupDetail() {
     <div>
       <Link to={'/'}>Back</Link>
       <Button onClick={() => handleClick()}>test2-to-about</Button>
-      <h3 key={group.id}>{group.name}: {group.location}</h3>
+      { group &&
+      <>
+        <h1 key={group.id}>{group.name}: {group.location}</h1>
+        <h2>{group.description}</h2>
+        <h3>{group.events.map((item) => (
+          <h3>{item.id} = {item.team1} - {item.team2}</h3>
+        ))}</h3>
+      </>
+      }
     </div>
   );
 }
