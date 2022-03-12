@@ -5,8 +5,11 @@ import { useFetchGroup } from '../hooks/fetch-group';
 import {DateTime} from 'luxon';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AlarmIcon from '@mui/icons-material/Alarm';
+import { Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { ClassNames } from '@emotion/react';
+//import { ClassNames } from '@emotion/react';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from '../theme'
 
 
 const useStyles = makeStyles( theme => ({
@@ -33,18 +36,20 @@ function GroupDetail() {
     navigate("/about");
   }
 
-  console.log(groupId)
+  //console.log(groupId)
   useEffect(() => {
     setGroup(data)
   }, [data])
-  console.log(group)
+  //console.log(group)
   if (error) return <h1>Error</h1>
   if (loading) return <h1>Loading...</h1>
 
   return group && (
+    <ThemeProvider theme={theme}>
     <div>
-      <Link to={'/'}>Back</Link>
-      <Button onClick={() => handleClick()}>test2-to-about</Button>
+      <Link  variant="secondary" to={'/'}>Back</Link>
+      <Typography variant="body3" component="h2">test</Typography>
+      <Button variant="secondary" onClick={() => handleClick()}>test2-to-about</Button>
       { group &&
       <>
         <h1 key={group.id}>{group.name}: {group.location}</h1>
@@ -67,6 +72,7 @@ function GroupDetail() {
       </>
       }
     </div>
+    </ThemeProvider>
   );
 }
 

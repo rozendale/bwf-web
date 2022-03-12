@@ -10,27 +10,31 @@ import Main from './components/main';
 import Sidebar from './components/sidebar';
 import theme from './theme'
 import { ThemeProvider } from '@mui/material/styles';
-
+import { AuthProvider } from './hooks/useAuth'
 
 function App() {
+
+  const user = JSON.parse(localStorage.getItem('bwf-user'));
 
   return (
     <Router>
       <ThemeProvider theme={theme}>
-        <div className="App">
-          <Header/>
-          <div className="general-content">
-            <Sidebar/>
-            <Routes>
-              <Route path="/*" element={<Main />} />
-              {/* <Route path="/group/:groupId" element={<GroupDetail />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} /> */}
+        <AuthProvider user={user}>
+          <div className="App">
+            <Header/>
+            <div className="general-content">
+              <Sidebar/>
+              <Routes>
+                <Route path="/*" element={<Main />} />
+                {/* <Route path="/group/:groupId" element={<GroupDetail />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} /> */}
 
-              <Route path="*" element={<ErrorPage />} />
-            </Routes>
+                <Route path="*" element={<ErrorPage />} />
+              </Routes>
+            </div>
           </div>
-        </div>
+        </AuthProvider>
       </ThemeProvider>
     </Router>
   );
