@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@material-ui/core';
-import { getGroups } from '../services/group-services';
+import { getGroups } from '../../services/group-services';
 
 
 function GroupList() {

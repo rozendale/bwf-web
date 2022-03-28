@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Button } from '@material-ui/core';
-import { useFetchGroup } from '../hooks/fetch-group';
+import { useFetchGroup } from '../../hooks/fetch-group';
 import {DateTime} from 'luxon';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AlarmIcon from '@mui/icons-material/Alarm';
@@ -9,7 +9,7 @@ import { Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 //import { ClassNames } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
-import theme from '../theme'
+import theme from '../../theme'
 
 
 const useStyles = makeStyles( theme => ({

@@ -1,25 +1,25 @@
 //import React, {useEffect, useState} from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Header from './components/header';
+import Header from './components/layout/header';
 import ErrorPage from './components/error-page';
-import Main from './components/main';
+import Main from './components/layout/main';
 // import GroupDetail from './components/group-detail';
 // import About from './components/about';
 // import Contact from './components/contact';
-import Sidebar from './components/sidebar';
+import Sidebar from './components/layout/sidebar';
 import theme from './theme'
 import { ThemeProvider } from '@mui/material/styles';
-import { AuthProvider } from './hooks/useAuth'
+import { AuthProvider } from './hooks/useAuth';
 
 function App() {
 
   const user = JSON.parse(localStorage.getItem('bwf-user'));
 
   return (
-    <Router>
-      <ThemeProvider theme={theme}>
-        <AuthProvider user={user}>
+    <ThemeProvider theme={theme}>
+      <AuthProvider user={user}>
+        <Router>
           <div className="App">
             <Header/>
             <div className="general-content">
@@ -34,9 +34,9 @@ function App() {
               </Routes>
             </div>
           </div>
-        </AuthProvider>
-      </ThemeProvider>
-    </Router>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
