@@ -6,6 +6,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 // import EmailIcon from '@mui/icons-material/Email';
 import { uploadAvatar } from '../../services/user-services';
+import { changePass } from '../../services/user-services';
+import {NotificationManager} from 'react-notifications';
 
 
 function Account() {
@@ -22,19 +24,27 @@ function Account() {
         e.preventDefault();
         const uploadData = new FormData();
         uploadData.append('image', image, image.name);
-        console.log(authData && authData)
-        await uploadAvatar(authData.user.profile.id, uploadData);
-    }
-    const changePass = async e => {
-        //e.preventDefault();
-        if(passMatch()){
-            const regData = await changePass({old_password: oldPassword, new_password: password}, authData.user.id);
-            // if(regData){
-            //     const data = await auth({username, password});
-            //     setAuth(data);
-            //     history('/account');
+
+        //console.log(authData && authData)
+        const uploaded = await uploadAvatar(authData.user.profile.id, uploadData);
+        if(uploaded){
+            NotificationManager.success("You have changed your avatar!");
         } else {
-                console.log("password doesn't match!")
+            NotificationManager.error("Error. Avatar has failed!");
+        }
+    }
+    const submitChangePass = async e => {
+        e.preventDefault();
+        if(passMatch()){
+            const passData = await changePass(
+                {old_password: oldPassword, new_password: password}, 
+                authData.user.id,
+                authData.token
+            );
+            if(passData) NotificationManager.success("You have changed your password!");
+        } else {
+            //console.log("password doesn't match!")
+            NotificationManager.warning("Password doesn't match!");
         }
     }
     return (
@@ -50,7 +60,7 @@ function Account() {
             </form>
             <br/>
             <h2>Change Password</h2>
-            <form onSubmit={changePass}>
+            <form onSubmit={submitChangePass}>
                 <Grid container spacing={1} alignItems="flex-end">
                     <Grid item>
                         <VpnKeyIcon />
@@ -62,7 +72,7 @@ function Account() {
                             type="password"
                             autoComplete="current-password"
                             variant="standard"
-                            onChange={ e => setPassword(e.target.value)}
+                            onChange={ e => setOldPassword(e.target.value)}
                         />
                     </Grid>
                 </Grid>
@@ -77,7 +87,7 @@ function Account() {
                             type="password"
                             autoComplete="current-password"
                             variant="standard"
-                            onChange={ e => setPassword2(e.target.value)}
+                            onChange={ e => setPassword(e.target.value)}
                         />
                     </Grid>
                 </Grid>
@@ -100,7 +110,6 @@ function Account() {
                     type="submit" 
                     variant="contained" 
                     color="primary"
-                    onClick={e => changePass}
                 >
                     Change password
                 </Button>

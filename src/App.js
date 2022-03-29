@@ -1,5 +1,6 @@
 //import React, {useEffect, useState} from 'react';
 import './App.css';
+import 'react-notifications/lib/notifications.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Header from './components/layout/header';
 import ErrorPage from './components/error-page';
@@ -11,6 +12,7 @@ import Sidebar from './components/layout/sidebar';
 import theme from './theme'
 import { ThemeProvider } from '@mui/material/styles';
 import { AuthProvider } from './hooks/useAuth';
+import {NotificationContainer} from 'react-notifications';
 
 function App() {
 
@@ -34,6 +36,7 @@ function App() {
               </Routes>
             </div>
           </div>
+          <NotificationContainer/>
         </Router>
       </AuthProvider>
     </ThemeProvider>
