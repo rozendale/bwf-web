@@ -10,6 +10,10 @@ import { makeStyles } from '@material-ui/core/styles';
 //import { ClassNames } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../../theme'
+import User from '../user/user';
+import { joinGroup, leaveGroup } from '../../services/group-services';
+import { useAuth } from '../../hooks/useAuth';
+import Comments from '../comments/comments';
 
 
 const useStyles = makeStyles( theme => ({
@@ -19,18 +23,24 @@ const useStyles = makeStyles( theme => ({
     marginTop: '10px',
     // color: theme.colors.mainAccentColor
     color: 'gold',
+  },
+  memberContainer: {
+    display: 'grid',
+    gridTemplateColumns: '100px auto'
   }
 }));
 
 function GroupDetail() {
   const classes = useStyles();
+  const { authData } = useAuth()
+  const navigate = useNavigate();
   const { groupId } = useParams();
   const [ data, loading, error ] = useFetchGroup(groupId);
   const [group, setGroup] = useState(null);
-  // const [ group, setGroup] = useState(null);
   // const [ loading, setLoading] = useState(false);
   // const [ error, setError] = useState(false);
-  const navigate = useNavigate();
+  const [ isGroup, setInGroup ] = useState(false);
+  const [ isAdmin, setIsAdmin ] = useState(false);
 
   function handleClick() {
     navigate("/about");
@@ -38,8 +48,26 @@ function GroupDetail() {
 
   //console.log(groupId)
   useEffect(() => {
+    if(data?.members){
+      console.log(data)
+      if(authData?.user) {
+        setInGroup(!!data.members.find( member => member.user.id === authData.user.id));
+        setIsAdmin(data.members.find( member => member.user.id === authData.user.id)?.admin);
+      }
+    }
     setGroup(data)
   }, [data])
+
+  const joinHere = () => {
+    joinGroup({user: authData.user.id, group: group.id}).then(
+      res => { console.log(res)}
+    )
+  }
+  const leaveHere = () => {
+    leaveGroup({user: authData.user.id, group: group.id}).then(
+      res => { console.log(res)}
+    )
+  }
   //console.log(group)
   if (error) return <h1>Error</h1>
   if (loading) return <h1>Loading...</h1>
@@ -48,7 +76,7 @@ function GroupDetail() {
     <ThemeProvider theme={theme}>
     <div>
       <Link  variant="secondary" to={'/'}>Back</Link>
-      <Typography variant="body3" component="h2">test</Typography>
+      {/* <Typography variant="body3" component="h2">test</Typography> */}
       <Button variant="secondary" onClick={() => handleClick()}>test2-to-about</Button>
       { group &&
       <>
@@ -57,6 +85,12 @@ function GroupDetail() {
         {/* <h3>{group.events.map((event) => (
           <h3>{event.id} = {event.team1} - {event.team2}</h3>
         ))}</h3> */}
+        {isGroup ?
+          <Button onClick={() => leaveHere()} variant="contained" color="primary">Leave Group</Button>
+        :
+          <Button onClick={() => joinHere()} variant="contained" color="primary">Join Group</Button>
+        }
+
         <h3>Events:</h3>
         { group.events.map ( event => {
           const format = "yyyy-MM-dd'T'hh:mm:ss'Z'"
@@ -69,6 +103,17 @@ function GroupDetail() {
             </p>
           </div>
         })}
+        <br/>
+        <h3>Members:</h3>
+        {console.log(group)}
+          { group.members.map ( member => {
+            return <div key={member.id} className={classes.memberContainer}>
+              {/* <p>{member.user.username}</p> */}
+              <User user={member.user}/>
+              <p>{member.points}pts</p>
+            </div>
+          })}
+        <Comments group={group} />
       </>
       }
     </div>
