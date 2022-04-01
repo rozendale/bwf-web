@@ -2,28 +2,17 @@ import React, {useEffect, useState} from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Button } from '@material-ui/core';
 import { useFetchGroup } from '../../hooks/fetch-group';
-import {DateTime} from 'luxon';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import AlarmIcon from '@mui/icons-material/Alarm';
-import { Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-//import { ClassNames } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../../theme'
 import User from '../user/user';
 import { joinGroup, leaveGroup } from '../../services/group-services';
 import { useAuth } from '../../hooks/useAuth';
 import Comments from '../comments/comments';
+import EventList from '../events/event-list';
 
 
 const useStyles = makeStyles( theme => ({
-  dateTime: {
-    fontSize: '18px',
-    marginRight: '3px',
-    marginTop: '10px',
-    // color: theme.colors.mainAccentColor
-    color: 'gold',
-  },
   memberContainer: {
     display: 'grid',
     gridTemplateColumns: '100px auto'
@@ -91,7 +80,7 @@ function GroupDetail() {
           <Button onClick={() => joinHere()} variant="contained" color="primary">Join Group</Button>
         }
 
-        <h3>Events:</h3>
+        {/* <h3>Events:</h3>
         { group.events.map ( event => {
           const format = "yyyy-MM-dd'T'hh:mm:ss'Z'"
           const evtTime = DateTime.fromFormat(event.time, format)
@@ -101,8 +90,9 @@ function GroupDetail() {
               <CalendarTodayIcon className={classes.dateTime}/>{evtTime.toSQLDate()}
               <AlarmIcon className={classes.dateTime}/>{evtTime.toFormat('HH:mm')}
             </p>
-          </div>
-        })}
+          </div> */}
+        <EventList events={group.events}/>
+
         <br/>
         <h3>Members:</h3>
         {console.log(group)}
