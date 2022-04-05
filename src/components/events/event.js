@@ -9,6 +9,7 @@ import {useFetchEvent} from '../../hooks/fetch-event';
 import User from '../user/user';
 import { TextField, Button } from '@material-ui/core';
 import { placeBet } from '../../services/event-services';
+import {NotificationManager} from 'react-notifications';
 
 
 const useStyles = makeStyles( theme => ({
@@ -49,6 +50,19 @@ export default function Event(){
 
     const sendBet = async () => {
       const bet = await placeBet(authData.token, {score1, score2, 'event': event.id})
+      if(bet) {
+        if(bet.new) {
+          event.bets.push(bet.result)
+        } else {
+          const myBetIndex = event.bets.findIndex(el => el.user.id === bet.result.user.id);
+          event.bets[myBetIndex] = bet.result;
+        }
+        NotificationManager.success(bet.message);
+        setScore1('');
+        setScore2('');
+      } else {
+        NotificationManager.error("Faillure");
+      }
       console.log(bet);
     }
 
