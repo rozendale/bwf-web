@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import {DateTime} from 'luxon';
 import { makeStyles } from '@material-ui/core/styles';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
@@ -72,7 +72,9 @@ export default function Event(){
     return (
     <>
     { event && evtTime && 
+    
     <div>
+      <Link variant="secondary" to={`/details/${event?.group}`}>Back</Link>
       <h3>{event.team1} vs. {event.team2}</h3>
       { event.score1 >= 0 && event.score2 >= 0 &&
       <h2>{event.score1} : {event?.score2}</h2>

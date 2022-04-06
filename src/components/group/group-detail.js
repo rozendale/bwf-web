@@ -57,6 +57,10 @@ function GroupDetail() {
       res => { console.log(res)}
     )
   }
+  const addEvent = () => {
+    console.log(group)
+    navigate("/event-form", group);
+  }
   //console.log(group)
   if (error) return <h1>Error</h1>
   if (loading) return <h1>Loading...</h1>
@@ -79,7 +83,9 @@ function GroupDetail() {
         :
           <Button onClick={() => joinHere()} variant="contained" color="primary">Join Group</Button>
         }
-
+        {isAdmin &&
+          <Button onClick={() => addEvent()} variant="contained" color="primary">Add event</Button>
+        }
         {/* <h3>Events:</h3>
         { group.events.map ( event => {
           const format = "yyyy-MM-dd'T'hh:mm:ss'Z'"
